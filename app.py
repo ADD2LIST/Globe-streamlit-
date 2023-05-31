@@ -1,66 +1,79 @@
 import streamlit as st
 
-import pydeck as pdk
+import numpy as np
 
-import pandas as pd
+import matplotlib.pyplot as plt
 
-import json
+from mpl_toolkits.mplot3d import Axes3D
 
-# Data for globe visualization
+def rotate_globe(theta, phi):
 
-DATA_URL = "https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/3d-heatmap/heatmap-data.json"
+    """Rotates the globe around the x-axis by theta degrees and around the y-axis by phi degrees.
 
-# Streamlit app
+    Args:
 
-def main():
+        theta: The angle of rotation around the x-axis in degrees.
 
-    st.title("3D Globe Visualization with Streamlit")
+        phi: The angle of rotation around the y-axis in degrees.
 
-    # Load data
+    Returns:
 
-    data = pd.read_json(DATA_URL)
+        The rotated globe.
 
-    # Set up initial view state
+    """
 
-    view_state = pdk.ViewState(latitude=0, longitude=0, zoom=1, max_zoom=10, pitch=0, bearing=0)
+    # Create a 3D axes object.
 
-    # Create the globe layer
+    fig = plt.figure()
 
-    globe_layer = pdk.Layer(
+    ax = fig.add_subplot(111, projection='3d')
 
-        "GlobeLayer",
+    # Create a grid of points on the globe.
 
-        data=data,
+    theta_range = np.linspace(0, 360, 100)
 
-        pickable=True,
+    phi_range = np.linspace(-90, 90, 100)
 
-        opacity=0.8,
+    x, y, z = np.meshgrid(theta_range, phi_range, copy=False)
 
-        auto_highlight=True,
+    # Rotate the grid of points.
 
-        radius_scale=100,
+    x = x * np.cos(theta) - y * np.sin(theta)
 
-        get_position="[longitude, latitude]",
+    y = x * np.sin(theta) + y * np.cos(theta)
 
-        get_radius="intensity",
+    # Plot the rotated grid of points.
 
-        get_color="[200, 30, 0]",
+    ax.plot_surface(x, y, z, cmap='cool', alpha=0.5)
 
-        get_elevation="intensity * 10",
+    # Set the title of the plot.
 
-    )
+    ax.set_title('Rotating Globe')
 
-    # Create the deck.gl visualization
+    # Show the plot.
 
-    r = pdk.Deck(layers=[globe_layer], initial_view_state=view_state, tooltip={"text": "{country}"})
+    plt.show()
 
-    # Render the globe
+# Create a Streamlit app.
 
-    st.pydeck_chart(r)
+app = st.py_app()
 
-if __name__ == "__main__":
+# Add a slider to control the rotation of the globe around the x-axis.
 
-    main()
+theta = st.slider('Rotation angle around x-axis (degrees)', 0, 360)
+
+# Add a slider to control the rotation of the globe around the y-axis.
+
+phi = st.slider('Rotation angle around y-axis (degrees)', 0, 360)
+
+# Call the `rotate_globe` function to rotate the globe.
+
+rotate_globe(theta, phi)
+
+
+        
+
+
 
 
 
