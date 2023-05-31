@@ -1,6 +1,14 @@
 streamlit
+streamlit
 
-pydeck
+numpy
 
-pandas
+matplotlib
+
+mpl_toolkits.mplot3d
+
+
+
+
+
 
