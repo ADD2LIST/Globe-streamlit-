@@ -1,12 +1,14 @@
 import streamlit as st
 
 import pydeck as pdk
+
 import pandas as pd
 
+import json
 
 # Data for globe visualization
 
-DATA_URL = "https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/3d-heatmap/heatmap-data.csv"
+DATA_URL = "https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/3d-heatmap/heatmap-data.json"
 
 # Streamlit app
 
@@ -16,7 +18,7 @@ def main():
 
     # Load data
 
-    data = pd.read_csv(DATA_URL)
+    data = pd.read_json(DATA_URL)
 
     # Set up initial view state
 
@@ -59,4 +61,6 @@ def main():
 if __name__ == "__main__":
 
     main()
+
+
 
